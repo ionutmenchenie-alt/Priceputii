@@ -29,7 +29,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Roles
+import ro.priceputii.app.ui.components.Illustration
 import ro.priceputii.app.ui.components.ButtonProgress
 import ro.priceputii.app.ui.components.findActivity
 
@@ -59,6 +61,11 @@ fun LoginScreen(onBack: () -> Unit, vm: LoginViewModel = viewModel()) {
         ) {
             when (vm.step) {
                 LoginViewModel.Step.DETAILS, LoginViewModel.Step.NAMES_ONLY -> {
+                    Illustration(
+                        if (vm.role == Roles.PRICEPUT) R.drawable.ill_login_garden else R.drawable.ill_find_priceputi,
+                        Modifier.padding(bottom = 20.dp),
+                        height = 180.dp,
+                    )
                     OutlinedTextField(
                         value = vm.firstName,
                         onValueChange = { vm.firstName = it },

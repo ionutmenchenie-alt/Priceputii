@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Catalog
 import ro.priceputii.app.data.Interest
 import ro.priceputii.app.data.Job
@@ -48,6 +49,7 @@ import ro.priceputii.app.data.UserProfile
 import ro.priceputii.app.data.rankSummary
 import ro.priceputii.app.ui.components.ButtonProgress
 import ro.priceputii.app.ui.components.EmptyState
+import ro.priceputii.app.ui.components.Illustration
 import ro.priceputii.app.ui.components.LoadingBox
 import ro.priceputii.app.ui.components.RankBadge
 import ro.priceputii.app.ui.components.dial
@@ -134,6 +136,7 @@ private fun JobSummary(job: Job) {
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
         ) {
+            Illustration(R.drawable.ill_job_done, height = 180.dp)
             Text("Lucrarea a fost finalizată.", modifier = Modifier.padding(12.dp))
         }
     }
@@ -256,6 +259,9 @@ private fun OwnerSection(
     }
     Text("Priceputi interesați (${interests.size})", style = MaterialTheme.typography.titleMedium)
     if (interests.isEmpty()) {
+        if (job.status == JobStatus.OPEN) {
+            Illustration(R.drawable.ill_find_priceputi, Modifier.padding(top = 8.dp), height = 170.dp)
+        }
         Text(
             "Încă nu s-a oferit nimeni. Te anunțăm când apare cineva.",
             style = MaterialTheme.typography.bodyMedium,

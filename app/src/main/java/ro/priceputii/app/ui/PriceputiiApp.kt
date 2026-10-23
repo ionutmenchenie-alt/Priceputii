@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import ro.priceputii.app.data.Roles
 import ro.priceputii.app.data.ServiceLocator
-import ro.priceputii.app.ui.components.LoadingBox
+import ro.priceputii.app.ui.onboarding.SplashScreen
 import ro.priceputii.app.ui.home.MainNavigation
 import ro.priceputii.app.ui.onboarding.OnboardingNavigation
 import ro.priceputii.app.ui.profile.PriceputProfileScreen
@@ -22,7 +22,7 @@ fun PriceputiiApp(session: SessionViewModel = viewModel()) {
     val state by session.state.collectAsStateWithLifecycle()
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         when (val current = state) {
-            SessionState.Loading -> LoadingBox()
+            SessionState.Loading -> SplashScreen()
             SessionState.SignedOut, is SessionState.NoProfile -> OnboardingNavigation()
             is SessionState.Ready -> {
                 val user = current.user

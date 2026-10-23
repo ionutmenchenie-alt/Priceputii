@@ -35,7 +35,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Catalog
+import ro.priceputii.app.ui.components.Illustration
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
 import ro.priceputii.app.ui.components.ButtonProgress
@@ -123,6 +125,7 @@ fun PostJobScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
         ) {
+            Illustration(R.drawable.ill_post_job, Modifier.padding(bottom = 16.dp), height = 170.dp)
             PickerField("Ce lucrare ai?", vm.task, "Alege din listă", onClick = { pickTask = true })
             Spacer(Modifier.height(12.dp))
             PickerField("Zona din ${user.city}", vm.zone, "Alege cartierul sau localitatea", onClick = { pickZone = true })

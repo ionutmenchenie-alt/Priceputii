@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Chat
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
@@ -48,6 +49,7 @@ fun InboxTab(user: UserProfile, chats: List<Chat>?, onOpenChat: (String) -> Unit
             "Niciun mesaj încă",
             "Conversațiile cu clienții și Priceputii apar aici.",
             modifier,
+            image = R.drawable.ill_messages,
         )
         else -> LazyColumn(modifier.fillMaxSize()) {
             item {

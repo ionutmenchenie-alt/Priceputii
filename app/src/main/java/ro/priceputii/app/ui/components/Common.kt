@@ -5,12 +5,17 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.firebase.Timestamp
 import ro.priceputii.app.data.rankFor
@@ -77,13 +86,30 @@ fun ButtonProgress() {
     )
 }
 
+/** One of the app's painted illustrations, cropped to fill a rounded frame. */
 @Composable
-fun EmptyState(title: String, body: String, modifier: Modifier = Modifier) {
+fun Illustration(@DrawableRes image: Int, modifier: Modifier = Modifier, height: Dp = 200.dp) {
+    Image(
+        painter = painterResource(image),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(height)
+            .clip(RoundedCornerShape(20.dp)),
+    )
+}
+
+@Composable
+fun EmptyState(title: String, body: String, modifier: Modifier = Modifier, @DrawableRes image: Int? = null) {
     Column(
         modifier = modifier.fillMaxSize().padding(32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        if (image != null) {
+            Illustration(image, Modifier.padding(bottom = 20.dp), height = 220.dp)
+        }
         Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
         Text(
             body,

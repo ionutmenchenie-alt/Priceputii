@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Job
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
@@ -63,6 +64,7 @@ fun MyJobsTab(
                 "Apasă „Postează lucrare” și spune ce ai de făcut."
             },
             modifier,
+            image = if (user.actsAsPriceput) R.drawable.ill_priceput_jobs else R.drawable.ill_post_job,
         )
         return
     }

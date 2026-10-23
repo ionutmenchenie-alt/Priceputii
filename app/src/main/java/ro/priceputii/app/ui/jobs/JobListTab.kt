@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Job
 import ro.priceputii.app.data.JobSort
 import ro.priceputii.app.data.ServiceLocator
@@ -110,6 +111,7 @@ fun JobListTab(
             visible.isEmpty() && jobs.orEmpty().isEmpty() -> EmptyState(
                 "Încă nu sunt lucrări",
                 "Când cineva din ${user.city} postează o lucrare, apare aici.",
+                image = if (user.actsAsPriceput) R.drawable.ill_priceput_jobs else R.drawable.ill_find_priceputi,
             )
             visible.isEmpty() -> EmptyState("Nimic găsit", "Încearcă alt cuvânt sau scoate filtrele.")
             else -> LazyColumn(

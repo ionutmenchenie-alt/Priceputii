@@ -45,7 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import ro.priceputii.app.R
 import ro.priceputii.app.data.Catalog
+import ro.priceputii.app.ui.components.Illustration
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
 import ro.priceputii.app.data.searchKey
@@ -126,6 +128,9 @@ fun PriceputProfileScreen(
             contentPadding = PaddingValues(16.dp),
         ) {
             item {
+                if (onboarding) {
+                    Illustration(R.drawable.ill_priceput_jobs, Modifier.padding(bottom = 16.dp), height = 180.dp)
+                }
                 Text("Orașul", style = MaterialTheme.typography.titleMedium)
                 Text(user.city, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 4.dp))
 
