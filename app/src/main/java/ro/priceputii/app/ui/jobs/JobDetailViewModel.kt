@@ -52,7 +52,7 @@ class JobDetailViewModel(handle: SavedStateHandle) : ViewModel() {
     /** Exact address and phone, unlocked for the owner and for interested Priceputi. */
     val contact: StateFlow<JobContact?> = access
         .flatMapLatest { level ->
-            if (level == Access.NONE) flowOf(null) else flow { emit(loadContact()) }
+            if (level == Access.NONE) flowOf<JobContact?>(null) else flow { emit(loadContact()) }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
