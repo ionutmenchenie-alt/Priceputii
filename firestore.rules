@@ -1,0 +1,116 @@
+rules_version = '2';
+
+// Security rules for the Priceputii Firestore database.
+// Paste this whole file in Firebase console → Firestore Database → Rules → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function me() {
+      return request.auth.uid;
+    }
+
+    function jobPath(jobId) {
+      return /databases/$(database)/documents/jobs/$(jobId);
+    }
+
+    // Profiles hold no phone numbers, so any signed-in user may read them.
+    // Stars and rank counters can't be edited by the user themselves.
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && me() == userId
+        && request.resource.data.starsTotal == 0
+        && request.resource.data.ratingCount == 0;
+      allow update: if signedIn() && me() == userId
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['starsTotal', 'ratingCount']);
+      allow delete: if signedIn() && me() == userId;
+    }
+
+    match /jobs/{jobId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.ownerId == me()
+        && request.resource.data.status == 'open'
+        && request.resource.data.interestedIds.size() == 0
+        && request.resource.data.price is int
+        && request.resource.data.price > 0
+        && request.resource.data.description is string
+        && request.resource.data.description.size() <= 3000;
+
+      // The owner edits their job (e.g. marks it done) but not the list of interested Priceputi.
+      // A Priceput may only add themselves to interestedIds, together with their interest document.
+      allow update: if signedIn() && (
+        (resource.data.ownerId == me()
+          && request.resource.data.ownerId == me()
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['interestedIds']))
+        ||
+        (resource.data.ownerId != me()
+          && resource.data.status == 'open'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['interestedIds'])
+          && request.resource.data.interestedIds.toSet() == resource.data.interestedIds.toSet().union([me()].toSet())
+          && existsAfter(/databases/$(database)/documents/jobs/$(jobId)/interests/$(me())))
+      );
+
+      allow delete: if signedIn() && resource.data.ownerId == me();
+
+      // Exact address and the client's phone: only the owner and Priceputi who said they're interested.
+      match /private/{docId} {
+        allow read: if signedIn() && (
+          get(jobPath(jobId)).data.ownerId == me()
+          || exists(/databases/$(database)/documents/jobs/$(jobId)/interests/$(me()))
+        );
+        allow create, update: if signedIn() && docId == 'contact'
+          && getAfter(jobPath(jobId)).data.ownerId == me();
+      }
+
+      // "Sunt interesat de lucrarea dvs.": carries the Priceput's name and phone to the client.
+      match /interests/{priceputId} {
+        allow read: if signedIn() && (priceputId == me() || get(jobPath(jobId)).data.ownerId == me());
+        allow create: if signedIn()
+          && priceputId == me()
+          && request.resource.data.priceputId == me()
+          && get(jobPath(jobId)).data.ownerId != me()
+          && get(jobPath(jobId)).data.status == 'open'
+          && 'priceput' in get(/databases/$(database)/documents/users/$(me())).data.roles;
+      }
+    }
+
+    // One conversation per pair of people; its id is the two uids, sorted, joined by "_".
+    match /chats/{chatId} {
+      allow read: if signedIn() && me() in resource.data.participants;
+      allow create: if signedIn()
+        && me() in request.resource.data.participants
+        && request.resource.data.participants.size() == 2
+        && chatId == request.resource.data.participants[0] + '_' + request.resource.data.participants[1];
+      allow update: if signedIn()
+        && me() in resource.data.participants
+        && request.resource.data.participants == resource.data.participants;
+
+      match /messages/{messageId} {
+        allow read: if signedIn()
+          && me() in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        allow create: if signedIn()
+          && request.resource.data.senderId == me()
+          && me() in getAfter(/databases/$(database)/documents/chats/$(chatId)).data.participants
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+      }
+    }
+
+    // Price lists: one document per Priceput and task, id "<uid>_<task>".
+    match /prices/{priceId} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.resource.data.priceputId == me()
+        && priceId.matches(me() + '_.+')
+        && request.resource.data.price is int
+        && request.resource.data.price > 0;
+      allow delete: if signedIn() && resource.data.priceputId == me();
+    }
+  }
+}

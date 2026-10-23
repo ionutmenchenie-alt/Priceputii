@@ -1,0 +1,14 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+# Firebase config is per-project; keep it out of the public repo.
+google-services.json
+!/.github/ci/google-services.json
