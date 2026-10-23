@@ -16,7 +16,7 @@ class UserRepository(private val db: FirebaseFirestore) {
     }
 
     /** Creates the profile on first sign-in, or adds the role to an existing one. */
-    suspend fun register(uid: String, firstName: String, lastName: String, role: String) {
+    suspend fun register(uid: String, firstName: String, lastName: String, avatar: String, role: String) {
         val doc = ref(uid)
         db.runTransaction { tx ->
             val existing = tx.get(doc)
@@ -26,6 +26,7 @@ class UserRepository(private val db: FirebaseFirestore) {
                     mapOf(
                         "firstName" to firstName,
                         "lastName" to lastName,
+                        "avatar" to avatar,
                         "roles" to FieldValue.arrayUnion(role),
                         "activeRole" to role,
                     ),
@@ -36,6 +37,7 @@ class UserRepository(private val db: FirebaseFirestore) {
                     mapOf(
                         "firstName" to firstName,
                         "lastName" to lastName,
+                        "avatar" to avatar,
                         "roles" to listOf(role),
                         "activeRole" to role,
                         "city" to Catalog.CITY,
@@ -69,6 +71,10 @@ class UserRepository(private val db: FirebaseFirestore) {
                 "activeRole" to Roles.PRICEPUT,
             ),
         ).await()
+    }
+
+    suspend fun setAvatar(uid: String, avatar: String) {
+        ref(uid).update("avatar", avatar).await()
     }
 
     suspend fun setActiveRole(uid: String, role: String) {

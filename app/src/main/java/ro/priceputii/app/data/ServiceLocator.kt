@@ -11,4 +11,5 @@ object ServiceLocator {
     val users by lazy { UserRepository(firestore) }
     val jobs by lazy { JobRepository(firestore) }
     val chats by lazy { ChatRepository(firestore) }
+    val prices by lazy { PriceRepository(firestore) }
 }

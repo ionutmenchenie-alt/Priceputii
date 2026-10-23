@@ -76,9 +76,16 @@ class JobDetailViewModel(handle: SavedStateHandle) : ViewModel() {
 
     fun markDone() = launchAction("Nu am putut marca lucrarea") { jobs.markDone(jobId) }
 
-    fun openChat(user: UserProfile, otherId: String, otherName: String, jobTitle: String, onOpened: (String) -> Unit) =
+    fun openChat(
+        user: UserProfile,
+        otherId: String,
+        otherName: String,
+        otherAvatar: String,
+        jobTitle: String,
+        onOpened: (String) -> Unit,
+    ) =
         launchAction("Nu am putut deschide conversația") {
-            onOpened(ServiceLocator.chats.openChat(user.uid, user.displayName, otherId, otherName, jobTitle))
+            onOpened(ServiceLocator.chats.openChat(user, otherId, otherName, otherAvatar, jobTitle))
         }
 
     private fun launchAction(failure: String, block: suspend () -> Unit) {

@@ -47,6 +47,7 @@ import ro.priceputii.app.data.JobContact
 import ro.priceputii.app.data.JobStatus
 import ro.priceputii.app.data.UserProfile
 import ro.priceputii.app.data.rankSummary
+import ro.priceputii.app.ui.components.Avatar
 import ro.priceputii.app.ui.components.ButtonProgress
 import ro.priceputii.app.ui.components.EmptyState
 import ro.priceputii.app.ui.components.Illustration
@@ -98,8 +99,8 @@ fun JobDetailScreen(
             ) {
                 JobSummary(current)
                 Spacer(Modifier.height(20.dp))
-                val chatWith = { otherId: String, otherName: String ->
-                    vm.openChat(user, otherId, otherName, current.task, onOpenChat)
+                val chatWith = { otherId: String, otherName: String, otherAvatar: String ->
+                    vm.openChat(user, otherId, otherName, otherAvatar, current.task, onOpenChat)
                 }
                 if (current.ownerId == user.uid) {
                     OwnerSection(current, contact, interests, busy = vm.busy, onChat = chatWith, onMarkDone = vm::markDone)
@@ -110,7 +111,7 @@ fun JobDetailScreen(
                         contact = contact,
                         busy = vm.busy,
                         onInterested = { vm.expressInterest(user) },
-                        onChat = { chatWith(current.ownerId, current.ownerName) },
+                        onChat = { chatWith(current.ownerId, current.ownerName, current.ownerAvatar) },
                     )
                 }
                 vm.error?.let {
@@ -147,7 +148,11 @@ private fun JobSummary(job: Job) {
         if (job.fromPlace.isNotBlank()) InfoRow("De la", job.fromPlace)
         if (job.toPlace.isNotBlank()) InfoRow("Până la", job.toPlace)
     }
-    InfoRow("Postată", "${timeAgo(job.createdAt)}, de ${job.ownerName}")
+    InfoRow("Postată", timeAgo(job.createdAt))
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+        Avatar(job.ownerAvatar, job.ownerName, size = 36.dp)
+        Text(job.ownerName, style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(start = 10.dp))
+    }
     if (job.description.isNotBlank()) {
         Text("Descriere", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 12.dp))
         Text(job.description, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 4.dp))
@@ -243,7 +248,7 @@ private fun OwnerSection(
     contact: JobContact?,
     interests: List<Interest>,
     busy: Boolean,
-    onChat: (String, String) -> Unit,
+    onChat: (String, String, String) -> Unit,
     onMarkDone: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -272,6 +277,7 @@ private fun OwnerSection(
     interests.forEach { person ->
         Column(Modifier.padding(vertical = 10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Avatar(person.avatar, person.name, Modifier.padding(end = 12.dp))
                 Text(person.name, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
                 RankBadge(person.starsTotal, person.ratingCount)
             }
@@ -283,7 +289,7 @@ private fun OwnerSection(
             Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { context.dial(person.phone) }) { Text("Sună") }
                 OutlinedButton(onClick = { context.sms(person.phone) }) { Text("SMS") }
-                OutlinedButton(onClick = { onChat(person.priceputId, person.name) }, enabled = !busy) { Text("Mesaj") }
+                OutlinedButton(onClick = { onChat(person.priceputId, person.name, person.avatar) }, enabled = !busy) { Text("Mesaj") }
             }
         }
         HorizontalDivider()

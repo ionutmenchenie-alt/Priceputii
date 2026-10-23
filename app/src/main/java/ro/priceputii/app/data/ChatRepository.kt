@@ -17,12 +17,19 @@ class ChatRepository(private val db: FirebaseFirestore) {
     /** One conversation per pair of people, whatever job it started from. */
     fun chatIdFor(a: String, b: String): String = listOf(a, b).sorted().joinToString("_")
 
-    suspend fun openChat(me: String, myName: String, other: String, otherName: String, jobTitle: String): String {
-        val id = chatIdFor(me, other)
+    suspend fun openChat(
+        me: UserProfile,
+        other: String,
+        otherName: String,
+        otherAvatar: String,
+        jobTitle: String,
+    ): String {
+        val id = chatIdFor(me.uid, other)
         chats.document(id).set(
             mapOf(
-                "participants" to listOf(me, other).sorted(),
-                "names" to mapOf(me to myName, other to otherName),
+                "participants" to listOf(me.uid, other).sorted(),
+                "names" to mapOf(me.uid to me.displayName, other to otherName),
+                "avatars" to mapOf(me.uid to me.avatar, other to otherAvatar),
                 "jobTitle" to jobTitle,
             ),
             SetOptions.merge(),
@@ -88,6 +95,7 @@ class ChatRepository(private val db: FirebaseFirestore) {
             id = id,
             participants = participants,
             names = (get("names") as? Map<String, String>).orEmpty(),
+            avatars = (get("avatars") as? Map<String, String>).orEmpty(),
             jobTitle = getString("jobTitle").orEmpty(),
             lastMessage = getString("lastMessage").orEmpty(),
             lastSenderId = getString("lastSenderId").orEmpty(),

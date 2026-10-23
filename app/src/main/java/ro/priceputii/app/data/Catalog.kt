@@ -103,6 +103,9 @@ object Catalog {
         ),
     )
 
+    /** Units a Priceput can price a task by. */
+    val units = listOf("lucrare", "oră", "mc", "m²", "bucată", "pom", "butuc", "km")
+
     fun categoryOf(task: String): String? = categories.firstOrNull { task in it.tasks }?.name
 
     /** Târgu Jiu neighborhoods followed by its component localities. */

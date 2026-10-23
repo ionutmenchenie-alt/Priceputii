@@ -16,11 +16,13 @@ iar Priceputii din oraș le găsesc, se oferă și iau legătura cu clientul. Po
 - Butonul „Sunt interesat de lucrarea dvs.”: clientul primește numele și telefonul Priceputului, iar Priceputul vede adresa și telefonul clientului.
 - Mesaje între client și Priceput, cu lista conversațiilor și mesajele necitite marcate.
 - „Marchează finalizată” pentru client.
+- Avatar ales la crearea contului (5 modele), schimbabil din Profil.
+- Lista de prețuri a Priceputului (preț + unitate pentru fiecare lucrare) și tabul „Prețuri”, unde clientul compară de la cel mai ieftin.
 
 ## Urmează
 
 Poze la lucrări, locație GPS și hartă, notificări „Lucrare nouă postată”, stele și ranguri după finalizare,
-liste de prețuri, peretele Comunitate, raportare și blocare, ștergerea contului, Termeni în aplicație.
+peretele Comunitate, raportare și blocare, ștergerea contului, Termeni în aplicație.
 
 ## Tehnic
 

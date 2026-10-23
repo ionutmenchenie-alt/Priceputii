@@ -1,7 +1,6 @@
 package ro.priceputii.app.ui.chat
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +30,7 @@ import ro.priceputii.app.R
 import ro.priceputii.app.data.Chat
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
+import ro.priceputii.app.ui.components.Avatar
 import ro.priceputii.app.ui.components.EmptyState
 import ro.priceputii.app.ui.components.LoadingBox
 import ro.priceputii.app.ui.components.timeAgo
@@ -78,15 +78,7 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
-        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.size(44.dp)) {
-            Box(contentAlignment = Alignment.Center) {
-                Text(
-                    name.take(1).uppercase(),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-            }
-        }
+        Avatar(chat.otherAvatar(me), name)
         Column(Modifier.weight(1f).padding(start = 12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(name, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))

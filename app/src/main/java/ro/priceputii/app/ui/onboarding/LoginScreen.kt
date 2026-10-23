@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ro.priceputii.app.R
 import ro.priceputii.app.data.Roles
+import ro.priceputii.app.ui.components.AvatarPicker
 import ro.priceputii.app.ui.components.Illustration
 import ro.priceputii.app.ui.components.ButtonProgress
 import ro.priceputii.app.ui.components.findActivity
@@ -65,6 +66,12 @@ fun LoginScreen(onBack: () -> Unit, vm: LoginViewModel = viewModel()) {
                         if (vm.role == Roles.PRICEPUT) R.drawable.ill_login_garden else R.drawable.ill_find_priceputi,
                         Modifier.padding(bottom = 20.dp),
                         height = 180.dp,
+                    )
+                    Text("Alege-ți avatarul", style = MaterialTheme.typography.titleMedium)
+                    AvatarPicker(
+                        selected = vm.avatar,
+                        onSelect = { vm.avatar = it },
+                        modifier = Modifier.padding(top = 8.dp, bottom = 20.dp),
                     )
                     OutlinedTextField(
                         value = vm.firstName,

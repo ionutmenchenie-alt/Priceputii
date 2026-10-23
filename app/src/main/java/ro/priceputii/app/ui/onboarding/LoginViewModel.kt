@@ -26,6 +26,7 @@ class LoginViewModel(handle: SavedStateHandle) : ViewModel() {
 
     var firstName by mutableStateOf("")
     var lastName by mutableStateOf("")
+    var avatar by mutableStateOf("")
     var phone by mutableStateOf("")
     var code by mutableStateOf("")
     var step by mutableStateOf(if (auth.currentUid != null) Step.NAMES_ONLY else Step.DETAILS)
@@ -64,6 +65,10 @@ class LoginViewModel(handle: SavedStateHandle) : ViewModel() {
     private fun namesValid(): Boolean {
         if (firstName.isBlank() || lastName.isBlank()) {
             error = "Completează numele și prenumele."
+            return false
+        }
+        if (avatar.isBlank()) {
+            error = "Alege un avatar."
             return false
         }
         return true
@@ -129,6 +134,6 @@ class LoginViewModel(handle: SavedStateHandle) : ViewModel() {
     /** Once the profile exists, the app moves on by itself. */
     private suspend fun register() {
         val uid = auth.currentUid ?: return
-        ServiceLocator.users.register(uid, firstName.trim(), lastName.trim(), role)
+        ServiceLocator.users.register(uid, firstName.trim(), lastName.trim(), avatar, role)
     }
 }

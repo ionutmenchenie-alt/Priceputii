@@ -18,6 +18,8 @@ data class UserProfile(
     val zones: List<String> = emptyList(),
     val radiusKm: Int = 10,
     val skills: List<String> = emptyList(),
+    val avatar: String = "",
+    val hasPriceList: Boolean = false,
     val starsTotal: Long = 0,
     val ratingCount: Long = 0,
 ) {
@@ -39,6 +41,7 @@ data class Job(
     val id: String = "",
     val ownerId: String = "",
     val ownerName: String = "",
+    val ownerAvatar: String = "",
     val category: String = "",
     val task: String = "",
     val description: String = "",
@@ -62,16 +65,33 @@ data class JobContact(
 data class Interest(
     val priceputId: String = "",
     val name: String = "",
+    val avatar: String = "",
     val phone: String = "",
     val starsTotal: Long = 0,
     val ratingCount: Long = 0,
     val createdAt: Timestamp? = null,
 )
 
+/** One line of a Priceput's price list, e.g. "spart lemne — 100 lei / mc". */
+data class PriceEntry(
+    val id: String = "",
+    val priceputId: String = "",
+    val name: String = "",
+    val avatar: String = "",
+    val phone: String = "",
+    val city: String = Catalog.CITY,
+    val task: String = "",
+    val price: Long = 0,
+    val unit: String = "",
+    val starsTotal: Long = 0,
+    val ratingCount: Long = 0,
+)
+
 data class Chat(
     val id: String,
     val participants: List<String>,
     val names: Map<String, String>,
+    val avatars: Map<String, String>,
     val jobTitle: String,
     val lastMessage: String,
     val lastSenderId: String,
@@ -80,6 +100,7 @@ data class Chat(
 ) {
     fun otherId(me: String): String = participants.firstOrNull { it != me } ?: me
     fun otherName(me: String): String = names[otherId(me)].orEmpty().ifBlank { "Utilizator" }
+    fun otherAvatar(me: String): String = avatars[otherId(me)].orEmpty()
     fun isUnread(me: String): Boolean {
         if (lastSenderId.isEmpty() || lastSenderId == me) return false
         val read = lastRead[me] ?: return true

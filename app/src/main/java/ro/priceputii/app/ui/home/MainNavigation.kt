@@ -10,6 +10,7 @@ import ro.priceputii.app.data.UserProfile
 import ro.priceputii.app.ui.chat.ChatScreen
 import ro.priceputii.app.ui.jobs.JobDetailScreen
 import ro.priceputii.app.ui.jobs.PostJobScreen
+import ro.priceputii.app.ui.prices.MyPriceListScreen
 import ro.priceputii.app.ui.profile.PriceputProfileScreen
 
 @Composable
@@ -27,6 +28,7 @@ fun MainNavigation(user: UserProfile) {
                 onOpenChat = openChat,
                 onPostJob = { nav.navigate("post") },
                 onEditPriceputProfile = { nav.navigate("priceputProfile") },
+                onEditMyPrices = { nav.navigate("myPrices") },
             )
         }
         composable("post") {
@@ -46,6 +48,9 @@ fun MainNavigation(user: UserProfile) {
         }
         composable("priceputProfile") {
             PriceputProfileScreen(user = user, onboarding = false, onDone = back, onBack = back)
+        }
+        composable("myPrices") {
+            MyPriceListScreen(user = user, onBack = back, onEditSkills = { nav.navigate("priceputProfile") })
         }
     }
 }

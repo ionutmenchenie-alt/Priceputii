@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +56,7 @@ class JobListViewModel : ViewModel() {
 fun JobListTab(
     user: UserProfile,
     onOpenJob: (String) -> Unit,
+    onEditMyPrices: () -> Unit,
     modifier: Modifier = Modifier,
     vm: JobListViewModel = viewModel(),
 ) {
@@ -71,6 +74,21 @@ fun JobListTab(
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         )
+        if (user.actsAsPriceput && !user.hasPriceList) {
+            Card(
+                onClick = onEditMyPrices,
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            ) {
+                Column(Modifier.padding(14.dp)) {
+                    Text("Fă-ți lista de prețuri", style = MaterialTheme.typography.titleSmall)
+                    Text(
+                        "Clienții care compară prețuri te găsesc și te sună direct.",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
+        }
         OutlinedTextField(
             value = query,
             onValueChange = { vm.query.value = it },

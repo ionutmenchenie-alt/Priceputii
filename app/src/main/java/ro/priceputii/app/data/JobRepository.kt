@@ -65,6 +65,7 @@ class JobRepository(private val db: FirebaseFirestore) {
                 mapOf(
                     "ownerId" to owner.uid,
                     "ownerName" to owner.displayName,
+                    "ownerAvatar" to owner.avatar,
                     "category" to Catalog.categoryOf(task).orEmpty(),
                     "task" to task,
                     "description" to description,
@@ -97,6 +98,7 @@ class JobRepository(private val db: FirebaseFirestore) {
                 mapOf(
                     "priceputId" to me.uid,
                     "name" to me.displayName,
+                    "avatar" to me.avatar,
                     "phone" to myPhone,
                     "starsTotal" to me.starsTotal,
                     "ratingCount" to me.ratingCount,

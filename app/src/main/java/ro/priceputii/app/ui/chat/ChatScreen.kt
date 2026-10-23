@@ -48,6 +48,7 @@ import ro.priceputii.app.data.Chat
 import ro.priceputii.app.data.Message
 import ro.priceputii.app.data.ServiceLocator
 import ro.priceputii.app.data.UserProfile
+import ro.priceputii.app.ui.components.Avatar
 import ro.priceputii.app.ui.components.clockTime
 
 class ChatViewModel(handle: SavedStateHandle) : ViewModel() {
@@ -102,6 +103,8 @@ fun ChatScreen(
         topBar = {
             TopAppBar(
                 title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    chat?.let { Avatar(it.otherAvatar(user.uid), it.otherName(user.uid), Modifier.padding(end = 10.dp), size = 36.dp) }
                     Column {
                         Text(chat?.otherName(user.uid).orEmpty(), style = MaterialTheme.typography.titleMedium)
                         chat?.jobTitle?.takeIf { it.isNotBlank() }?.let {
@@ -111,6 +114,7 @@ fun ChatScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
+                    }
                     }
                 },
                 navigationIcon = {
